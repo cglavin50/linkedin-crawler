@@ -4,23 +4,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios")); // calling methods, don't need to instantiate axios object
-const cheerio = require("cheerio"); // using require as I will instantiate cheerio object
+const cheerio = require("cheerio");
 // import html = require('cheerio/lib/static');
 let url = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=software%20engineering%20intern&location=United%20StatesgeoId=103644278&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0&start=0";
-// ^ basic URL for swe intern, page number means nothing
-let html = "";
-// axios GET request
+const getjobs = (html) => {
+    const $ = cheerio.load(html);
+    const jobsHTML = $('li'); // each job is a separate list item under linkedIn
+    const jobs = [];
+    console.log(jobsHTML.length + " jobs found");
+    jobsHTML.each((index, element) => {
+        const jobTitle = $(element).find('h3.base-search-card__title').text().trim();
+        const company = $(element).find('h4.base-search-card__subtitle').text().trim();
+        const companyPage = $(element).find('h4.base-search-card__subtitle').attr('href'); // attr's aren't guaranteed so can come out to undefined
+        const location = $(element).find('span.job-search-card__location').text().trim();
+        const link = $(element).find('a.base-card__full-link').attr('href');
+        const remote = jobTitle.includes("Remote") ? true : false;
+        jobs.push({
+            title: jobTitle,
+            link: link,
+            location: location,
+            company: company,
+            remote: remote,
+            companyPage: companyPage,
+        });
+    });
+    return jobs;
+};
+// fetch, then parse the jobs
 axios_1.default.get(url).then(response => {
-    html = response.data;
-    //  console.log(html);
-});
-// parse 
-const $ = cheerio.load(html);
-const jobs = $('li'); // get all list items from the html
-console.log("Printing first job");
-console.log(jobs[0]);
-// iterate
-jobs.each((index, element) => {
-    const jobTitle = $(element).find('h3.base-search-card__title').text(); // get each element, then find the h3 header and output the text
-    console.log(jobTitle);
+    const html = response.data;
+    const jobs = getjobs(html); // API provides interface to interact with basically array of list items
+    console.log(jobs);
 });

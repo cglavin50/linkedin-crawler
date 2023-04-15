@@ -6,12 +6,12 @@ As someone who has spent a considerable amount of time crawling LinkedIn for job
 
 Create a web app where you can login with email, and create 'job searches'. With each search you can specify keywords, location, remote, etc, which will then send a request to the backend. The backend will scrape linkedin, and put the 1000 results in a DB. Then, each user can view their job searches, and click to get to a page where they can view their top 10 (get next 10 as they go), click complete application (mark as done), as well as see their completed applications.
 
-### Notes
+## Notes
 
 - LinkedIn uses infinite scrolling, when reaching the bottom of the page will issue a new GET request appending start=25 after the url
 - DB design: While I won't need it right away, search/sorting options would be great later on, so a relational database is likely the move. Attributes: title, remote, link, location, company, companyPage, completed.
 
-#### To Do List
+## To Do List
 
 **Backend**
 - Link up to the DB after creation

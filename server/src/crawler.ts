@@ -68,9 +68,16 @@ const getJobs = (keywords: string[], location: string) => {
     }
     url += url2;
     // fetch, then parse the jobs
-    axios.get(url).then( response => {
-    const html: string = response.data;
-    const jobs: Job[] = parsejobs(html); // API provides interface to interact with basically array of list items
-    console.log(jobs);
-    });
+    for (let counter: number = 0; counter < 39; counter+=25)
+    {
+        url = url.slice(0, -1);
+        url += String(counter);
+        console.log(url);
+        axios.get(url).then( response => {
+            const html: string = response.data;
+            const jobs: Job[] = parsejobs(html); // API provides interface to interact with basically array of list items
+            console.log(jobs);
+        });
+    }
+    
 }

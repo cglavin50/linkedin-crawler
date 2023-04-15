@@ -16,11 +16,13 @@ Create a web app where you can login with email, and create 'job searches'. With
 **Backend**
 - Link up to the DB after creation
 - Start building out framework for REST endpoints
+
 **Frontend**
 - Need to start with a basic page that can display the DB (forwarded from backend)
 - Once I can view, then start building buttons for get next 10, completed application
 - Then, work on a login system with AuthO authorization
 - Finally, CSS :(
+    
 **DB**
 - Start designing SQL DB, want sorting options later so that makes it easier (plus need more SQL experience)
 - Going to start with a local 

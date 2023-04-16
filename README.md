@@ -10,7 +10,7 @@ Create a web app where you can login with email, and create 'job searches'. With
 
 **Backend**
 - Link up to the DB after creation
-- Start building out framework for REST endpoints
+- Build out endpoints (REST, need to change tsconfig start script as well)
 
 **Frontend**
 - Need to start with a basic page that can display the DB (forwarded from backend)
@@ -20,5 +20,6 @@ Create a web app where you can login with email, and create 'job searches'. With
 
 **DB**
 - Start designing SQL DB, want sorting options later so that makes it easier (plus need more SQL experience)
+- Using PostgreSQL as, in theory if this were to scale, there would be a relatively high number of writes as people mark their data as completed, search for more jobs, etc. Additionally, there wouldn't be a high read-load, as they come in batches and need minimal sorting. 
 - Going to start with a local deployment, could like to use some sort of cloud offering later (switch isn't that hard)
-- Attributes: title, remote, link, location, company, companyPage, completed. Maybe unique ID as well.
+- Attributes: title, remote, link, location, company, companyPage, completed. Maybe unique ID as well (could be hash of title+company). Also look into pay, date posted as attributes for future development

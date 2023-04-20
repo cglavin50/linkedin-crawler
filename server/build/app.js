@@ -30,7 +30,8 @@ const express_1 = __importDefault(require("express"));
 const pg_1 = require("pg");
 const dotenv = __importStar(require("dotenv"));
 // establish global variables // 
-dotenv.config({ path: '../../.env', });
+dotenv.config({ path: '../.env', }); // npm start has a different working directory than directly running, change to ../../.env if running from build directory
+console.log(process.env);
 const port = 8080; // append to .env later
 const app = (0, express_1.default)();
 const user = process.env.DB_USER;
@@ -46,12 +47,13 @@ const client = new pg_1.Client({
     port: DBport
 });
 // end globals // 
+console.log("password: " + pswd);
 // Attributes: title, remote, link, location, company, companyPage, completed // expand later
 function initDB() {
     client.connect().then(() => console.log('Connected to the DB'))
         .catch((err) => console.error('connection error to DB', err.stack));
     let createQuery = `
-    CREATE TABLE IF NOT EXISTS "users" (
+    CREATE TABLE IF NOT EXISTS "tempUserTable" (
 	    "id" SERIAL,
 	    "title" VARCHAR(100) NOT NULL,
 	    "company" VARCHAR(100) NOT NULL,
@@ -64,8 +66,10 @@ function initDB() {
     );`;
     client.query({
         text: createQuery
-    }).then(() => console.log('Created table in DB'))
+    }).then(() => console.log('Created table in DB (if dne)'))
         .catch((err) => console.error('Error creating table', err.stack));
 } // connects, and initializes the table if one does not exist for this user
 // to do, add multiple user functionality later, need front-end for that
+function uploadSearch() {
+}
 initDB();

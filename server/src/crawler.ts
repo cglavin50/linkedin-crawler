@@ -14,7 +14,7 @@ export type Job = { // had optional values, removing that functionality for now 
     companyPage: string;
 }
 
-export const parseJobs = (html: string): Job[] => { // takes in html string and returns Cheerio interface with cheerio elements
+export const parseHTML = (html: string): Job[] => { // takes in html string and returns Cheerio interface with cheerio elements
     const $:cheerio.CheerioAPI = cheerio.load(html);
     const jobsHTML: cheerio.Cheerio<cheerio.Element> = $('li'); // each job is a separate list item under linkedIn
     const jobs: Job[] = [];
@@ -44,10 +44,11 @@ export const parseJobs = (html: string): Job[] => { // takes in html string and 
     return jobs;
 }
 
-export const getJobs = (keywords: string[], location: string) => {
+export const getJobs = (keywords: string[], location: string): Job[] => {
     // first, customize the url with keywords and location
     let url: string = 'https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords='; // =software%20engineering%20intern&location=United%20States'
     let url2: string = '&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0&start=0';
+    var jobs: Job[];
     for (let i: number = 0; i < keywords.length; i++)
     {
         const word: string = keywords[i];
@@ -89,13 +90,10 @@ export const getJobs = (keywords: string[], location: string) => {
     // for now, just get once
     axios.get(url).then( response => {
         const html: string = response.data;
-        const jobs: Job[] = parseJobs(html);
+        const j: Job[] = parseHTML(html);
         console.log(jobs);
-    })
+        jobs = jobs.concat(j);
+        return jobs;
+    }) // should return an array of 25 jobs
+    throw new Error('Error in getting data from url');
 }
-// // fetch, then parse the jobs
-// axios.get(url).then( response => {
-//     const html: string = response.data;
-//     const jobs: Job[] = parsejobs(html); // API provides interface to interact with basically array of list items
-//     console.log(jobs);
-// });

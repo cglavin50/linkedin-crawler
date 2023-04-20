@@ -85,9 +85,3 @@ const getJobs = (keywords, location) => {
     });
 };
 exports.getJobs = getJobs;
-// // fetch, then parse the jobs
-// axios.get(url).then( response => {
-//     const html: string = response.data;
-//     const jobs: Job[] = parsejobs(html); // API provides interface to interact with basically array of list items
-//     console.log(jobs);
-// });

@@ -21,6 +21,6 @@
     "cheerio": "^1.0.0-rc.12"
   },
   "scripts": {
-    "start": "npx tsc && node build/crawler.js"
+    "start": "npx tsc && node build/app.js"
   }
 }

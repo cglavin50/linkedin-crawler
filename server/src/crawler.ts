@@ -2,7 +2,7 @@ import axios from 'axios'; // calling methods, don't need to instantiate axios o
 import cheerio = require('cheerio');
 // import html = require('cheerio/lib/static');
 
-let url: string = 'https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=software%20engineering%20intern&location=United%20StatesgeoId=103644278&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0&start=0';
+// let url: string = 'https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=software%20engineering%20intern&location=United%20StatesgeoId=103644278&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0&start=0';
 // ^ basic URL for swe intern, page number means nothing. 0 <= startnumber <= 999
 
 export type Job = { // had optional values, removing that functionality for now as that will add DB complications. Can expand here at a future point
@@ -18,7 +18,7 @@ export const parseHTML = (html: string): Job[] => { // takes in html string and 
     const $:cheerio.CheerioAPI = cheerio.load(html);
     const jobsHTML: cheerio.Cheerio<cheerio.Element> = $('li'); // each job is a separate list item under linkedIn
     const jobs: Job[] = [];
-    console.log(jobsHTML.length + ' jobs found');
+    // console.log(jobsHTML.length + ' jobs found');
     jobsHTML.each((index, element) => {
         var jobTitle:string = $(element).find('h3.base-search-card__title').text().trim();
         var company:string = $(element).find('h4.base-search-card__subtitle').text().trim();
@@ -44,11 +44,11 @@ export const parseHTML = (html: string): Job[] => { // takes in html string and 
     return jobs;
 }
 
-export const getJobs = (keywords: string[], location: string): Job[] => {
+export const getJobs = async (keywords: string[], location: string): Promise<Job[]> => {
     // first, customize the url with keywords and location
     let url: string = 'https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords='; // =software%20engineering%20intern&location=United%20States'
     let url2: string = '&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0&start=0';
-    var jobs: Job[];
+    var jobs: Job[]|null = null;
     for (let i: number = 0; i < keywords.length; i++)
     {
         const word: string = keywords[i];
@@ -57,7 +57,8 @@ export const getJobs = (keywords: string[], location: string): Job[] => {
         for (let j: number = 1; j < words.length; j++)
         {
             url += "%20" + words[j];
-        }
+        } // keyworkds[i] has been added
+        url += "%20";
     } // end for to append keywords
     url += '&location=';
     const locations: string[] = location.split(' ');
@@ -88,12 +89,12 @@ export const getJobs = (keywords: string[], location: string): Job[] => {
     //     console.log(jobs);
     // });
     // for now, just get once
-    axios.get(url).then( response => {
-        const html: string = response.data;
-        const j: Job[] = parseHTML(html);
-        console.log(jobs);
-        jobs = jobs.concat(j);
-        return jobs;
-    }) // should return an array of 25 jobs
-    throw new Error('Error in getting data from url');
+//    console.log(url); // URL is confirmed working
+    const html: string = (await axios.get(url)).data;
+    return parseHTML(html);
 }
+
+let words = ["mechanical", "engineering"]
+let location = "united states"
+
+getJobs(words, location);
